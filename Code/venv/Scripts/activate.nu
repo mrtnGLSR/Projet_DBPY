@@ -9,7 +9,7 @@ def-env activate-virtualenv [] {
     }
 
     let is_windows = ((sys).host.name | str downcase) == 'windows'
-    let virtual_env = 'C:\Users\pk18ugy\Desktop\Modules\MA-PROJ-DBPY\Code\venv'
+    let virtual_env = 'C:\Users\pk18ugy\Desktop\Modules\Projet_DBPY\Code\venv'
     let bin = 'Scripts'
     let path_sep = ';'
     let path_name = if $is_windows {
@@ -89,4 +89,4 @@ def-env activate-virtualenv [] {
 activate-virtualenv
 
 alias pydoc = python -m pydoc
-alias deactivate = source 'C:\Users\pk18ugy\Desktop\Modules\MA-PROJ-DBPY\Code\venv\Scripts\deactivate.nu'
+alias deactivate = source 'C:\Users\pk18ugy\Desktop\Modules\Projet_DBPY\Code\venv\Scripts\deactivate.nu'

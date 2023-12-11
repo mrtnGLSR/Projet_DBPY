@@ -11,17 +11,33 @@ from datetime import *
 
 # variables
 
-# définition de la base de donnée
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="",
-  buffered=True,
-  autocommit=True
-)
-cursor = mydb.cursor()
-cursor.execute("USE proj_dbpy")
-# TODO ajouter un utilisateur pour plus de sécurité
+cursor = None
+mydb = None
+
+# connection à la base de données
+def DBConnect(user, password):
+    global mydb, cursor
+    print(password)
+    try:
+        mydb = mysql.connector.connect(
+          host="localhost",
+          user=user,
+          password=password,
+          buffered=True,
+          autocommit=True
+        )
+        cursor = mydb.cursor()
+        cursor.execute("USE proj_dbpy")
+        return True
+    except:
+        return False
+DBConnect("customer", "")
+
+# déconnection
+def disconnect():
+    global mysql, cursor
+    cursor.close()
+    mydb.close()
 
 # fonctions
 

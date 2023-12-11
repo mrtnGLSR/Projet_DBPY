@@ -1,4 +1,4 @@
-@set "VIRTUAL_ENV=C:\Users\pk18ugy\Desktop\Modules\MA-PROJ-DBPY\Code\venv"
+@set "VIRTUAL_ENV=C:\Users\pk18ugy\Desktop\Modules\Projet_DBPY\Code\venv"
 
 @if defined _OLD_VIRTUAL_PROMPT (
     @set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
