@@ -4,7 +4,7 @@ Date        :17.11.2023
 Version     :1.0
 Description :partie graphique de loutil de management des scors dans le cadre du MA dbpy
 """
-
+import copy
 # modules
 from tkinter import *
 from tkinter import messagebox
@@ -13,9 +13,9 @@ import database as data
 
 # constants
 # définnition des langues
-listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur"}}
+listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur", "you didn'a have privileges":"Vous n'avez pas les privilèges", "warning":"attention", "Are you sure you want delete the line ":"Voulez vous vraiment duprimer la ligne ", "insert":"insertion"}}
 # définition des thèmes
-listThemes = {"dark":{"bg":"#222222", "bg2":"#114411", "btn":"#003300", "fg":"#ffffff", "actbtn":"#006600", "actfg":"#ffffff", "fgbtn":"#ffffff", "bgTable": "#151515", "bgEntry":"#666666"},
+listThemes = {"dark":{"bg":"#222222", "bg2":"#114411", "btn":"#003300", "fg":"#ffffff", "actbtn":"#006600", "actfg":"#ffffff", "fgbtn":"#ffffff", "bgTable": "#151515", "bgEntry":"#404040"},
               "white":{"bg":"#ffffff", "bg2":"#00cc00", "btn":"#00aa00", "fg":"#000000", "actbtn":"#44cc44", "actfg":"#ffffff", "fgbtn":"#000000", "bgTable": "#ffffff", "bgEntry":"#ffffff"},
               "normal":{"bg":"#8bc9c2", "bg2":"#ffffff", "btn":"#ffffff", "fg":"#000000", "actbtn":"#44cc44", "actfg":"#ffffff", "fgbtn":"#000000", "bgTable": "#ffffff", "bgEntry":"#ffffff"}}
 
@@ -25,8 +25,11 @@ theme = []
 dicoEntries={"ID": None, "Pseudo": None, "Game": None, "nb_total": None, "nb_ok": None, "start date": None, "start time": None}
 
 
-def Error(text = "no text"):
-    return "\033[91m" + text + "\033[0m"
+def Error(text = "Error"):
+    return "\033[91m" + "Error: " + str(datetime.datetime.now()) + ", " + text + "\033[0m"
+
+def Warning(text = "warning"):
+    return "\033[33m" + "Warning: "+ str(datetime.datetime.now()) + ", " + text + "\033[0m"
 
 # fonction d'application de la configuration
 def AplyConf():
@@ -37,6 +40,10 @@ def AplyConf():
     themeName = conf.readline()[0:-1]
     conf.close()
 
+def FalseUserMessage():
+    messagebox.showinfo(Lang("warning"), Lang("you didn'a have privileges"))
+    print(Warning("False user for this action"))
+
 # fonction de définition de la langue
 def Lang(text = "no text"):
     if lang == "en":
@@ -45,7 +52,7 @@ def Lang(text = "no text"):
         try:
             return listLangs[lang][text]
         except:
-            print(Error("error in the translate of " + str(text)))
+            print(Error("translate of " + str(text) + " not found"))
             return text
 
 # variables
@@ -53,6 +60,7 @@ isFiltred = False
 logicTable = []
 user = "customer"
 textChangeUser = ["login", "logout"]
+listLines = []
 
 # functions
 
@@ -102,9 +110,22 @@ def filter():
 
 # fonction de réinitialisation de la table
 def Reset():
-    if messagebox.askquestion(Lang("Are you sure you want to erase the results?")):
-        data.delete()
-        Load()
+    if user == "su":
+        if messagebox.askquestion("error", Lang("Are you sure you want to erase the results?")):
+            data.delete()
+            Load()
+    else:
+        FalseUserMessage()
+
+def Delete(line):
+    if user == "su":
+        id = logicTable[line][0]
+        if messagebox.askquestion("warning", Lang("Are you sure you want delete the line ") + str(id) + " ?"):
+            data.delete(id)
+            Load()
+
+    else:
+        FalseUserMessage()
 
 # fonction pour changer d'utilisateur
 def ChangeUser():
@@ -114,11 +135,12 @@ def ChangeUser():
         connectWindow = Tk()
         connectWindow.title("connection")
         connectWindow.geometry("400x400")
-        labelPassword = Label(connectWindow, text=Lang("password"))
+        connectWindow.configure(bg=theme["bg"])
+        labelPassword = Label(connectWindow, text=Lang("password"), fg=theme["fg"], bg=theme["bg"])
         labelPassword.pack()
-        EntryPassword = Entry(connectWindow, show="*", width=20)
+        EntryPassword = Entry(connectWindow, show="*", width=20, fg=theme["fg"], bg=theme["bgEntry"])
         EntryPassword.pack()
-        labelError = Label(connectWindow, fg="red", text="")
+        labelError = Label(connectWindow, fg="red", text="", bg=theme["bg"])
         labelError.pack()
         def enterCommand():
             global user
@@ -133,7 +155,7 @@ def ChangeUser():
                 print(Error("incorrect password :" + password))
                 data.DBConnect("customer", "")
                 labelError["text"] = "incorrect password"
-        enterButton = Button(connectWindow, text="enter", command=enterCommand)
+        enterButton = Button(connectWindow, text="enter", command=enterCommand, bg=theme["btn"], fg=theme["fgbtn"])
         enterButton.pack()
         connectWindow.mainloop()
     else:
@@ -143,16 +165,42 @@ def ChangeUser():
     Load()
 
 
+# fenêtre d'ajout de ligne
+def InsertDataWindow():
+    if user == "su":
+        labelTable = ["Pseudo", "Game", "nb_total", "nb_ok", "start date", "start time"]
+        dicoInsertEntries = {"Pseudo": None, "Game": None, "nb_total": None, "nb_ok": None, "start date": None, "start time": None}
+        insertDataWindow = Tk()
+        insertDataWindow.geometry("300x200")
+        insertDataWindow.title(Lang("insert"))
+        insertDataWindow.configure(bg=theme["bg"])
+
+        textFrame = Frame(insertDataWindow, bg=theme["bg"])
+        textFrame.pack(side=LEFT)
+        entryFrame = Frame(insertDataWindow, bg=theme["bg"])
+        entryFrame.pack(side=RIGHT)
+
+        for i in labelTable:
+            Label(textFrame, text=Lang(i), fg=theme["fg"], bg=theme["bg"]).pack()
+        for i in range(6):
+            dicoInsertEntries[labelTable[i]] = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
+            dicoInsertEntries[labelTable[i]].pack()
+        insertDataWindow.mainloop()
+    else:
+        FalseUserMessage()
+
+
 
 # graphical
 window = Tk()
 window.title("proj_dbpy")
 window.geometry(str(window.winfo_screenwidth()) + "x" + str(window.winfo_screenheight()))
 menu = Menu(window)
+trashIcon = PhotoImage(file="./trash_icon16.png")
 
 # fonction pour charger l'interface graphique
 def Display():
-    global window, logicTable, menu
+    global window, logicTable, menu, listLines
     print("open the window ...")
     try:
         for i in window.winfo_children():
@@ -166,21 +214,23 @@ def Display():
 
     filterFrame = Frame(frameTop, bg=theme["bgTable"])
     filterFrame.pack(anchor="w")
-    listWidth = [7, 20, 30, 20, 20, 35, 35, 14]
+    listWidth = [7, 20, 20, 30, 30, 30, 35, 35, 14]
     for i in range(7):
         Label(filterFrame, width=listWidth[i], text=[Lang("ID"), Lang("Pseudo"), Lang("Game"), Lang("nb_total"), Lang("nb_ok"), Lang("start date"), Lang("start time"), Lang("progress")][i], bg=theme["bg2"], fg=theme["fg"]).grid(row=1, column=i)
     count = 0
     for i in ["ID", "Pseudo", "Game", "nb_total", "nb_ok", "start date", "start time"]:
-        dicoEntries[i] = Entry(filterFrame, width=listWidth[count], bg=theme["bgEntry"])
+        dicoEntries[i] = Entry(filterFrame, width=listWidth[count], bg=theme["bgEntry"], fg=theme["fg"])
         dicoEntries[i].grid(row=2, column=count)
         count += 1
-    filterButton = Button(filterFrame, width=14, text=Lang("filter"), bg=theme["btn"], fg=theme["fgbtn"], command=filter).grid(row=2, column=7)
+    Button(filterFrame, width=14, text=Lang("filter"), bg=theme["btn"], fg=theme["fgbtn"], command=filter).grid(row=2, column=7)
 
     # menu
     menu = Menu(window)
     menu.delete(0, "end")
+
     menu1 = Menu(menu)
     menu1.add_command(label=Lang("reset"), command=Reset)
+    menu1.add_command(label=Lang("insert"), command=InsertDataWindow)
     menu.add_cascade(label=Lang("data"), menu=menu1)
 
     menuTheme = Menu(menu)
@@ -205,7 +255,7 @@ def Display():
     menu.add_cascade(menu=menuSettings, label=Lang("settings"))
 
     # table
-    TGCanvas = Canvas(frameMidle, width=1600, bg=theme["bg"], bd=0, relief="ridge", highlightthickness=0)
+    TGCanvas = Canvas(frameMidle, width=1600, height=1000, bg=theme["bg"], bd=0, relief="ridge", highlightthickness=0)
     TGCanvas.pack(side=LEFT ,anchor="n", pady=30)
 
     def on_configure(event):
@@ -224,20 +274,21 @@ def Display():
             ProgressColor = "#ff0000"
         elif Value < 75:
             ProgressColor = "#ff9900"
-        Frame(field, bg=ProgressColor, width=Value, height=15).grid(row=line + 1, column=7, sticky="w")
+        Frame(field, bg=ProgressColor, width=Value, height=15).grid(row=line + 1, column=8, sticky="w")
 
     # affichage des données
-    frameTable = Frame(TGCanvas, bg=theme["bgTable"])
+    frameTable = Frame(TGCanvas, bg=theme["bgTable"], height=1200)
     count = 0
-    for Text in [Lang("ID"), Lang("Pseudo"), Lang("Game"), Lang("nb_total"), Lang("nb_ok"), Lang("start date"), Lang("start time"), Lang("progress")]:
+    for Text in ["", Lang("ID"), Lang("Pseudo"), Lang("Game"), Lang("nb_total"), Lang("nb_ok"), Lang("start date"), Lang("start time"), Lang("progress")]:
         Label(frameTable, text=Text, borderwidth=1, bg=theme["bg2"], width=listWidth[count], fg=theme["fg"]).grid(row=0,column=count)
         count += 1
     if not isFiltred:
         logicTable = data.GetTable("parties")
     for line in range(len(logicTable)):
+        Button(frameTable, image=trashIcon, command=lambda xline=line: Delete(xline), bg="red").grid(row=line + 1, column=0)
         for column in range(7):
             Label(frameTable, text=str(logicTable[line][column]), width=listWidth[column], borderwidth=1, bg=theme["bgTable"],
-                   fg=theme["fg"]).grid(row=line + 1, column=column)
+                   fg=theme["fg"]).grid(row=line + 1, column=column + 1)
         if int(logicTable[line][3]) != 0:
             ProgressValue = int(int(logicTable[line][3]) / int(logicTable[line][4]) * 100)
             ProgressBar(frameTable, ProgressValue)

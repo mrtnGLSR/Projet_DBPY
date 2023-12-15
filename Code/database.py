@@ -71,5 +71,9 @@ def GetTable(table, columns="all"):
     return cursor.fetchall()
 
 # fonction de réinitialisation de la db
-def delete():
-    cursor.execute("delete from parties;")
+def delete(line = "all"):
+    print(line)
+    if line == "all":
+        cursor.execute("delete from parties;")
+    else:
+        cursor.execute("delete from parties WHERE id = " + str(line) + ";")
