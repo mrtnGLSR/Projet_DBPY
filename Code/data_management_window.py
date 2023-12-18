@@ -13,7 +13,7 @@ import database as data
 
 # constants
 # définnition des langues
-listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur", "you didn'a have privileges":"Vous n'avez pas les privilèges", "warning":"attention", "Are you sure you want delete the line ":"Voulez vous vraiment duprimer la ligne ", "insert":"insertion"}}
+listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur", "you didn'a have privileges":"Vous n'avez pas les privilèges", "warning":"attention", "Are you sure you want delete the line ":"Voulez vous vraiment duprimer la ligne ", "insert":"insertion", "enter":"entrer"}}
 # définition des thèmes
 listThemes = {"dark":{"bg":"#222222", "bg2":"#114411", "btn":"#003300", "fg":"#ffffff", "actbtn":"#006600", "actfg":"#ffffff", "fgbtn":"#ffffff", "bgTable": "#151515", "bgEntry":"#404040"},
               "white":{"bg":"#ffffff", "bg2":"#00cc00", "btn":"#00aa00", "fg":"#000000", "actbtn":"#44cc44", "actfg":"#ffffff", "fgbtn":"#000000", "bgTable": "#ffffff", "bgEntry":"#ffffff"},
@@ -175,9 +175,13 @@ def InsertDataWindow():
         insertDataWindow.title(Lang("insert"))
         insertDataWindow.configure(bg=theme["bg"])
 
-        textFrame = Frame(insertDataWindow, bg=theme["bg"])
+        frameUp = Frame(insertDataWindow, bg=theme["bg"])
+        frameUp.pack()
+        frameDown = Frame(insertDataWindow, bg=theme["bg"])
+        frameDown.pack()
+        textFrame = Frame(frameUp, bg=theme["bg"])
         textFrame.pack(side=LEFT)
-        entryFrame = Frame(insertDataWindow, bg=theme["bg"])
+        entryFrame = Frame(frameUp, bg=theme["bg"])
         entryFrame.pack(side=RIGHT)
 
         for i in labelTable:
@@ -185,18 +189,17 @@ def InsertDataWindow():
         for i in range(6):
             dicoInsertEntries[labelTable[i]] = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
             dicoInsertEntries[labelTable[i]].pack()
+        Button(frameDown, text=Lang("enter"), bg=theme["btn"], fg=theme["fgbtn"]).pack()
         insertDataWindow.mainloop()
     else:
         FalseUserMessage()
-
-
 
 # graphical
 window = Tk()
 window.title("proj_dbpy")
 window.geometry(str(window.winfo_screenwidth()) + "x" + str(window.winfo_screenheight()))
 menu = Menu(window)
-trashIcon = PhotoImage(file="./trash_icon16.png")
+trashIcon = PhotoImage(file="./img/trash_icon16.png")
 
 # fonction pour charger l'interface graphique
 def Display():
@@ -256,7 +259,7 @@ def Display():
 
     # table
     TGCanvas = Canvas(frameMidle, width=1600, height=1000, bg=theme["bg"], bd=0, relief="ridge", highlightthickness=0)
-    TGCanvas.pack(side=LEFT ,anchor="n", pady=30)
+    TGCanvas.pack(side=LEFT, anchor="n", pady=30)
 
     def on_configure(event):
         TGCanvas.configure(scrollregion=TGCanvas.bbox('all'))
