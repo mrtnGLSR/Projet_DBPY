@@ -5,26 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8089e42-433f-4e8c-b2d8-04b5843a566b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/languages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config" beforeDir="false" afterPath="$PROJECT_DIR$/config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_management_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_management_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proj_dbpy_structure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/proj_dbpy_structure.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/activate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate.bat" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/activate.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate.fish" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/activate.fish" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate.nu" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/activate.nu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip-3.9.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/pip-3.9.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/pip.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip3.9.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/pip3.9.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/pip3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/pip3.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/wheel-3.9.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/wheel-3.9.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/wheel.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/wheel.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/wheel3.9.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/wheel3.9.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/wheel3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/wheel3.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Doc/journal_de_bord.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Doc/journal_de_bord.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,6 +26,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -64,7 +52,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.data_management_window">
+  <component name="RunManager" selected="Python.menu">
     <configuration name="data_management_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -155,10 +143,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.data_management_window" />
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.geo01" />
         <item itemvalue="Python.menu" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.data_management_window" />
+        <item itemvalue="Python.geo01" />
       </list>
     </recent_temporary>
   </component>
@@ -178,6 +166,17 @@
       <workItem from="1701784553547" duration="1163000" />
       <workItem from="1702028967516" duration="4742000" />
       <workItem from="1702281749281" duration="11402000" />
+      <workItem from="1702479328575" duration="1923000" />
+      <workItem from="1702549373407" duration="1561000" />
+      <workItem from="1702564228871" duration="4000" />
+      <workItem from="1702564861440" duration="784000" />
+      <workItem from="1702624256826" duration="5747000" />
+      <workItem from="1702633210025" duration="4945000" />
+      <workItem from="1702647042695" duration="2179000" />
+      <workItem from="1702892761855" duration="5155000" />
+      <workItem from="1703237977285" duration="8953000" />
+      <workItem from="1703252559228" duration="2428000" />
+      <workItem from="1704707113946" duration="5378000" />
     </task>
     <servers />
   </component>
@@ -185,9 +184,9 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Code$geo01.coverage" NAME="geo01 Coverage Results" MODIFIED="1701425998073" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$data_management_window.coverage" NAME="data_management_window Coverage Results" MODIFIED="1702292801029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$menu.coverage" NAME="menu Coverage Results" MODIFIED="1701424933084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1701428402650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$geo01.coverage" NAME="geo01 Coverage Results" MODIFIED="1702550322731" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$data_management_window.coverage" NAME="data_management_window Coverage Results" MODIFIED="1702897685064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$menu.coverage" NAME="menu Coverage Results" MODIFIED="1704712328942" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$test.coverage" NAME="test Coverage Results" MODIFIED="1704707259639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -4,16 +4,17 @@ Date        :17.11.2023
 Version     :1.0
 Description :partie graphique de loutil de management des scors dans le cadre du MA dbpy
 """
-import copy
 # modules
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk as ttk
 import datetime
 import database as data
+import sys
 
 # constants
 # définnition des langues
-listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur", "you didn'a have privileges":"Vous n'avez pas les privilèges", "warning":"attention", "Are you sure you want delete the line ":"Voulez vous vraiment duprimer la ligne ", "insert":"insertion", "enter":"entrer"}}
+listLangs = {"fr":{"dark":"sombre", "white":"claire", "data":"données", "settings":"paramètres", "reset":"réinitialiser", "english":"anglais", "french":"français", "theme":"thème", "text":"text", "language":"langue", "ID":"ID", "Pseudo":"Pseudo", "Game":"Jeux", "nb_ok":"nb_ok", "nb_total":"nb_total", "start date":"heure de commencement", "start time":"heure de départ", "Are you sure you want to erase the results?":"êtes vous sûre de vouloir éfacer les résultats ?", "normal":"normal", "ratio":"ratio", "progress":"progression", "filter":"filtrer", "change user":"changer d'utilisateur", "you didn'a have privileges":"Vous n'avez pas les privilèges", "warning":"attention", "Are you sure you want delete the line ":"Voulez vous vraiment duprimer la ligne ", "insert":"insertion", "enter":"entrer", "time":"temps"}}
 # définition des thèmes
 listThemes = {"dark":{"bg":"#222222", "bg2":"#114411", "btn":"#003300", "fg":"#ffffff", "actbtn":"#006600", "actfg":"#ffffff", "fgbtn":"#ffffff", "bgTable": "#151515", "bgEntry":"#404040"},
               "white":{"bg":"#ffffff", "bg2":"#00cc00", "btn":"#00aa00", "fg":"#000000", "actbtn":"#44cc44", "actfg":"#ffffff", "fgbtn":"#000000", "bgTable": "#ffffff", "bgEntry":"#ffffff"},
@@ -24,10 +25,11 @@ lang = "fr"
 theme = []
 dicoEntries={"ID": None, "Pseudo": None, "Game": None, "nb_total": None, "nb_ok": None, "start date": None, "start time": None}
 
-
+# fonction pour ecrir le texte sur la sortie stderr
 def Error(text = "Error"):
-    return "\033[91m" + "Error: " + str(datetime.datetime.now()) + ", " + text + "\033[0m"
+    sys.stderr.write("Error: "+ str(datetime.datetime.now()) + ", " + str(text) + "\n")
 
+# fonction pour mettre la syntax du text en mode avertissement
 def Warning(text = "warning"):
     return "\033[33m" + "Warning: "+ str(datetime.datetime.now()) + ", " + text + "\033[0m"
 
@@ -52,7 +54,7 @@ def Lang(text = "no text"):
         try:
             return listLangs[lang][text]
         except:
-            print(Error("translate of " + str(text) + " not found"))
+            print(Warning("translate of " + str(text) + " not found"))
             return text
 
 # variables
@@ -131,7 +133,9 @@ def Delete(line):
 def ChangeUser():
     global user
     password = "mot de passe"
+    # connection en superutilisateur
     if user == "customer":
+        # structure de la fenêtre
         connectWindow = Tk()
         connectWindow.title("connection")
         connectWindow.geometry("400x400")
@@ -142,39 +146,45 @@ def ChangeUser():
         EntryPassword.pack()
         labelError = Label(connectWindow, fg="red", text="", bg=theme["bg"])
         labelError.pack()
+        # vérification des paramêtres
         def enterCommand():
             global user
             nonlocal password, labelError, connectWindow
             password = EntryPassword.get()
             data.disconnect()
+            # tester la connection
             if data.DBConnect("su", password):
                 print("connected")
                 user = "su"
                 connectWindow.destroy()
+            # avertir l'utilisateur si le mot de passe n'est pas correcte
             else:
-                print(Error("incorrect password :" + password))
+                Error("incorrect password :" + password)
                 data.DBConnect("customer", "")
                 labelError["text"] = "incorrect password"
+        # définition du bouton d'entrée
         enterButton = Button(connectWindow, text="enter", command=enterCommand, bg=theme["btn"], fg=theme["fgbtn"])
         enterButton.pack()
         connectWindow.mainloop()
+    # déconnection du superutilisateur
     else:
         data.disconnect()
         data.DBConnect("customer", "")
         user = "customer"
     Load()
 
-
 # fenêtre d'ajout de ligne
 def InsertDataWindow():
+    # créer la fenêtre si l'utilisateur est en su
     if user == "su":
-        labelTable = ["Pseudo", "Game", "nb_total", "nb_ok", "start date", "start time"]
-        dicoInsertEntries = {"Pseudo": None, "Game": None, "nb_total": None, "nb_ok": None, "start date": None, "start time": None}
+        # structure de la fenêtre
+        labelTable = ["Pseudo", "Game", "nb_total", "nb_ok", "start date", "time"]
         insertDataWindow = Tk()
         insertDataWindow.geometry("300x200")
         insertDataWindow.title(Lang("insert"))
         insertDataWindow.configure(bg=theme["bg"])
 
+        # frames de la fenêtre
         frameUp = Frame(insertDataWindow, bg=theme["bg"])
         frameUp.pack()
         frameDown = Frame(insertDataWindow, bg=theme["bg"])
@@ -184,17 +194,68 @@ def InsertDataWindow():
         entryFrame = Frame(frameUp, bg=theme["bg"])
         entryFrame.pack(side=RIGHT)
 
+        # créer tous les labels
         for i in labelTable:
             Label(textFrame, text=Lang(i), fg=theme["fg"], bg=theme["bg"]).pack()
-        for i in range(6):
-            dicoInsertEntries[labelTable[i]] = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
-            dicoInsertEntries[labelTable[i]].pack()
-        Button(frameDown, text=Lang("enter"), bg=theme["btn"], fg=theme["fgbtn"]).pack()
-        insertDataWindow.mainloop()
+        # création des entrées
+        Pseudoentry = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
+        GameEntry = ttk.Combobox(entryFrame, values=["jeu1", "jeu2", "jeu3"])
+        GameEntry.configure(background="red")
+        nb_totalEntry = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
+        nb_okEntry = Entry(entryFrame, fg=theme["fg"], bg=theme["bgEntry"])
+        startFrame = Frame(entryFrame, bg=theme["bg"])
+        dateFrame = Frame(startFrame, bg=theme["bg"])
+        timeFrame = Frame(startFrame, bg=theme["bg"])
+        dayEntry = Entry(dateFrame, fg=theme["fg"], bg=theme["bgEntry"], width=2)
+        mothEntry = Entry(dateFrame, fg=theme["fg"], bg=theme["bgEntry"], width=2)
+        yearEntry = Entry(dateFrame, fg=theme["fg"], bg=theme["bgEntry"], width=4)
+        clockEntry = Entry(timeFrame, fg=theme["fg"], bg=theme["bgEntry"], width=2)
+        minutesEntry = Entry(timeFrame, fg=theme["fg"], bg=theme["bgEntry"], width=2)
+        secondsEntry = Entry(timeFrame, fg=theme["fg"], bg=theme["bgEntry"], width=2)
+
+        # placer les éléments
+        Pseudoentry.pack()
+        GameEntry.pack()
+        GameEntry.pack()
+        GameEntry.pack()
+        GameEntry.pack()
+        nb_totalEntry.pack()
+        nb_okEntry.pack()
+        startFrame.pack(side=TOP)
+        dateFrame.pack(side=BOTTOM)
+        timeFrame.pack()
+        dayEntry.pack(side=LEFT)
+        Label(dateFrame, text=".", fg=theme["fg"], bg=theme["bg"]).pack(side=LEFT)
+        mothEntry.pack(side=LEFT)
+        Label(dateFrame, text=".", fg=theme["fg"], bg=theme["bg"]).pack(side=LEFT)
+        yearEntry.pack(side=LEFT)
+        clockEntry.pack(side=LEFT)
+        Label(timeFrame, text=":", fg=theme["fg"], bg=theme["bg"]).pack(side=LEFT)
+        minutesEntry.pack(side=LEFT)
+        Label(timeFrame, text=":", fg=theme["fg"], bg=theme["bg"]).pack(side=LEFT)
+        secondsEntry.pack(side=LEFT)
+        def EnterChoice():
+            # capture des données
+            for i in [dayEntry, mothEntry, yearEntry]:
+                print(i.get().isdigit())
+            dateValue = datetime.date(day=int(dayEntry.get()), month=int(mothEntry.get()), year=int(yearEntry.get()))
+            #dateValue = datetime.date(str(dayEntry.get()) + ":" + str(mothEntry.get()) + ":" + str(yearEntry.get()))
+            print(str(dateValue))
+            # data.SaveScore(Pseudoentry.get(), GameEntry.get(), nb_okEntry.get(), nb_totalEntry.get(), )
+            print(GameEntry.get())
+
+            # SaveScore(pseudo, game, nb_ok, nb_total,startDay , time)
+
+        enterButton = Button(frameDown, text=Lang("Enter"), bg=theme["btn"], fg=theme["fgbtn"], command=EnterChoice)
+        enterButton.pack()
+
+    # informer l'utilisateur qu'il n'a pas les droits
     else:
         FalseUserMessage()
 
+
 # graphical
+# création de la base de la fenêtre
 window = Tk()
 window.title("proj_dbpy")
 window.geometry(str(window.winfo_screenwidth()) + "x" + str(window.winfo_screenheight()))
@@ -205,18 +266,21 @@ trashIcon = PhotoImage(file="./img/trash_icon16.png")
 def Display():
     global window, logicTable, menu, listLines
     print("open the window ...")
+    # détruire l'ancienne fenêtre
     try:
         for i in window.winfo_children():
             i.destroy()
     except:
         pass
     window.configure(bg=theme["bg"])
-
+    # création des frames principales
     frameTop = Frame(window, bg="blue").pack(side=TOP)
     frameMidle = Frame(window, bg="green").pack(side=BOTTOM)
 
     filterFrame = Frame(frameTop, bg=theme["bgTable"])
     filterFrame.pack(anchor="w")
+
+    # création du menu de filtrage
     listWidth = [7, 20, 20, 30, 30, 30, 35, 35, 14]
     for i in range(7):
         Label(filterFrame, width=listWidth[i], text=[Lang("ID"), Lang("Pseudo"), Lang("Game"), Lang("nb_total"), Lang("nb_ok"), Lang("start date"), Lang("start time"), Lang("progress")][i], bg=theme["bg2"], fg=theme["fg"]).grid(row=1, column=i)

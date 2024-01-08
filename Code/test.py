@@ -1,16 +1,18 @@
 import tkinter as tk
+from tkinter import ttk
 
-def on_button_click(button_number):
-    print(f"Bouton {button_number} cliqué!")
+# Création de la fenêtre principale
+app = tk.Tk()
+app.title("Exemple de Combobox")
 
-root = tk.Tk()
+# Création de la Combobox
+comboExample = ttk.Combobox(app, values=["January", "February", "March", "April"])
 
-# Nombre de boutons
-num_buttons = 5
+# Changer la couleur de fond
+comboExample.configure(background="lightblue")
 
-# Création des boutons avec une boucle for
-for i in range(num_buttons):
-    button = tk.Button(root, text=f"Bouton {i+1}", command=lambda num=i+1: on_button_click(num))
-    button.grid(row=i, column=0)
+# Placement de la Combobox dans la fenêtre
+comboExample.pack(padx=10, pady=10)
 
-root.mainloop()
+# Exécution de la boucle principale
+app.mainloop()

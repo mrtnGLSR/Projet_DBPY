@@ -13,17 +13,22 @@ albl_image=[None, None, None] # label (with images) array
 a_image=[None, None, None] # images array
 a_title=[None, None, None] # array of title (ex: GEO01)
 
+openManagement = False
+
 
 # call other windows (exercices)
-def exercise(event,exer):
+def exercise(event, exer):
     print(exer)
     subprocess.Popen(["python", exer+".py"])
 
 
 #call display_results
 def display_result(event):
-    # TODO
-    print("display_result")
+    global openManagement
+    openManagement = True
+    window.destroy()
+
+
 
 
 # Main window
@@ -58,8 +63,14 @@ btn_display.grid(row=1+ 2*len(a_exercise)//3 , column=1)
 btn_display.bind("<Button-1>",lambda e: display_result(e))
 
 btn_finish = tk.Button(window, text="Quitter", font=("Arial", 15))
-btn_finish.grid(row=2+ 2*len(a_exercise)//3 , column=1)
+btn_finish.grid(row=2+ 2*len(a_exercise)//3, column=1)
 btn_finish.bind("<Button-1>", quit)
 
 # main loop
 window.mainloop()
+
+# ouverture de la fenêtre de gestion de données
+if openManagement:
+    print("data_management_windows.py opened")
+    process = subprocess.Popen(["python", "data_management_window.py"], shell=True)
+    process.wait()
