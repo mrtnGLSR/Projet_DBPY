@@ -4,11 +4,11 @@
 
 import tkinter as tk
 import random
+import tkinter.messagebox
 from math import pow
 import time
-import database as data
 import datetime
-from tkinter.messagebox import *
+import database as data
 
 # constants
 startDate = datetime.date.today()
@@ -48,8 +48,11 @@ def next(event):
     entry_n2.delete(0,'end')
 
 def save_game(event):
-    data.SaveScore(entry_pseudo.get(), "convertion unités", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
-    print("party save")
+    if data.ConnectUser(entry_pseudo.get(), entry_Passwd.get()):
+        data.SaveScore(entry_pseudo.get(), "convertion unités", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
+    else:
+        tkinter.messagebox.showerror("error", "connection failed")
+        print("party save")
 
 def test(event):
     global n2, nbsuccess, nbtrials
@@ -92,23 +95,26 @@ lbl_duration.grid(row=0,column=2, ipady=5, padx=10,pady=10)
 
 tk.Label(window, text='Pseudo:', font=("Arial", 15)).grid(row=1, column=0, padx=5, pady=5)
 entry_pseudo = tk.Entry(window, font=("Arial", 15))
-# entry_pseudo.pack(ipadx=2, ipady=10, padx=5,pady=5)
 entry_pseudo.grid(row=1, column=1)
 
 lbl_result = tk.Label(window, text=f"{pseudo}  Essais réussis : 0/0", font=("Arial", 15))
 lbl_result.grid( row=1, column=2,columnspan=3, ipady=5, padx=20,pady=20)
 
+tk.Label(window, text='Password:', font=("Arial", 15)).grid(row=2, column=0, padx=5, pady=5)
+entry_Passwd = tk.Entry(window, font=("Arial", 15), show="*")
+entry_Passwd.grid(row=2, column=1, padx=5, pady=5)
+
 label_n1 = tk.Label(window, text="n1:",font=("Arial", 15))
-label_n1.grid(row=2,column=0,ipady=5, padx=20,pady=20,sticky='E')
+label_n1.grid(row=3,column=0,ipady=5, padx=20,pady=20,sticky='E')
 
 entry_n2 = tk.Entry(window,font=("Arial", 15))
-entry_n2.grid(row=2,column=1,ipady=5,padx=5, pady=20,sticky='E')
+entry_n2.grid(row=3,column=1,ipady=5,padx=5, pady=20,sticky='E')
 
 label_u2 =tk.Label(window, text="u2:",font=("Arial", 15))
-label_u2.grid(row=2,column=2,ipady=5,padx=5,pady=20,sticky='W')
+label_u2.grid(row=3,column=2,ipady=5,padx=5,pady=20,sticky='W')
 
 btn_next =tk.Button(window, text="Suivant", font=("Arial", 15))
-btn_next.grid(row=3,column=0,columnspan=3,ipady=5, padx=5,pady=5)
+btn_next.grid(row=4,column=0,columnspan=4,ipady=5, padx=5,pady=5)
 
 btn_finish = tk.Button(window, text="Terminer", font=("Arial", 15))
 btn_finish.grid(row=6, column=0, columnspan=6)

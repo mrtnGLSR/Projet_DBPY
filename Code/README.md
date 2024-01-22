@@ -20,6 +20,7 @@
 l'installation se fait de la manière suivante:
 1. copier le repértoir code en local
 2. executez le fichier proj_dbpy_structure.py
+3. installer les module pycrypto et simplecrypte
 ## python
 ## sql
 ## remarques

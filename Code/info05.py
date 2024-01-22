@@ -11,7 +11,7 @@ from math import sqrt
 import time
 import database as data
 import datetime
-from tkinter.messagebox import *
+import tkinter.messagebox
 
 # constants
 startDate = datetime.date.today()
@@ -194,8 +194,11 @@ def sl_v(event):
 
 
 def save_game(event):
-    print("dans save")
-    data.SaveScore(entry_pseudo.get(), "couleur", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
+    if data.ConnectUser(entry_pseudo.get(), entry_Passwd.get()):
+        data.SaveScore(entry_pseudo.get(), "info05", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
+    else:
+        tkinter.messagebox.showerror("error", "connection failed")
+        print("party save")
 
 
 def display_timer():
@@ -226,15 +229,19 @@ tk.Label(window, text='Pseudo:', font=("Arial", 15)).grid(row=1, column=0, padx=
 entry_pseudo = tk.Entry(window, font=("Arial", 15))
 entry_pseudo.grid(row=1, column=1,sticky='W')
 
+tk.Label(window, text='Password:', font=("Arial", 15)).grid(row=2, column=0, padx=5, pady=5)
+entry_Passwd = tk.Entry(window, font=("Arial", 15), show="*")
+entry_Passwd.grid(row=2, column=1, padx=5, pady=5)
+
 lbl_result = tk.Label(window, text=f"Essais réussis : 0/0", font=("Arial", 15))
-lbl_result.grid( row=1, column=2, ipady=5, padx=20,pady=10)
+lbl_result.grid( row=3, column=2, ipady=5, padx=20,pady=10)
 
 canvas = tk.Canvas(window, width=l, height=height, bg="#f9d893")
-canvas.grid( row=2, column=0, columnspan=3, ipady=5, padx=20,pady=5)
+canvas.grid( row=3, column=0, columnspan=3, ipady=5, padx=20,pady=5)
 
 #frae
 frame_response = tk.Frame(window)
-frame_response.grid( row=3, column=0, columnspan=3, padx=20,pady=10)
+frame_response.grid( row=4, column=0, columnspan=3, padx=20,pady=10)
 lbl_response =tk.Label(frame_response, text="Couleur en hexa:", font=("Arial", 15))
 lbl_response.grid( row=0, column=0, ipady=5, padx=10,pady=5,sticky='E')
 entry_response = tk.Entry(frame_response,font=("Arial", 15))
@@ -243,22 +250,22 @@ entry_response.grid( row=0, column=1, ipady=5, padx=10,pady=5,sticky='W')
 #sliders
 slider_r = tk.Scale(window, from_=0, to=255, length=600, orient=tk.HORIZONTAL, troughcolor="red", command=sl_r)
 slider_r.set(128)
-slider_r.grid(row=4, column=0, columnspan=3, padx=10, pady=0)
+slider_r.grid(row=5, column=0, columnspan=3, padx=10, pady=0)
 slider_g = tk.Scale(window, from_=0, to=255,  length=600, orient=tk.HORIZONTAL, troughcolor="green",command=sl_g)
 slider_g.set(128)
-slider_g.grid(row=5,column=0,columnspan=3, padx=10,pady=0)
+slider_g.grid(row=6,column=0,columnspan=3, padx=10,pady=0)
 slider_b = tk.Scale(window, from_=0, to=255, length=600, orient=tk.HORIZONTAL, troughcolor="blue",command=sl_b)
 slider_b.set(128)
-slider_b.grid(row=6,column=0,columnspan=3, padx=10,pady=0)
+slider_b.grid(row=7,column=0,columnspan=3, padx=10,pady=0)
 slider_v = tk.Scale(window, from_=0, to=100, length=600, orient=tk.HORIZONTAL, troughcolor=h_color([127,127,127]))
 slider_v.set(128)
-slider_v.grid(row=7,column=0,columnspan=3, padx=10,pady=0)
+slider_v.grid(row=8,column=0,columnspan=3, padx=10,pady=0)
 
 btn_next =tk.Button(window, text="Suivant", font=("Arial", 15))
-btn_next.grid( row=8, column=1, ipady=5, padx=20,pady=10)
+btn_next.grid( row=9, column=1, ipady=5, padx=20,pady=10)
 
 btn_finish = tk.Button(window, text="Terminer", font=("Arial", 15))
-btn_finish.grid(row=8, column=2)
+btn_finish.grid(row=9, column=2)
 
 
 # first call of next_point

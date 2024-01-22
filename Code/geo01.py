@@ -8,7 +8,7 @@ from math import sqrt
 import time
 import database as data
 import datetime
-from tkinter.messagebox import *
+import tkinter.messagebox
 
 # constants
 startDate = datetime.date.today()
@@ -91,8 +91,11 @@ def next_point(event):
 
 
 def save_game(event):
-    data.SaveScore(entry_pseudo.get(), "geo", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
-    print("dans save")
+    if data.ConnectUser(entry_pseudo.get(), entry_Passwd.get()):
+        data.SaveScore(entry_pseudo.get(), "geo1", nbsuccess, nbtrials, startDate, datetime.datetime.now() - start_date)
+    else:
+        tkinter.messagebox.showerror("error", "connection failed")
+        print("party save")
 
 
 def display_timer():
@@ -126,8 +129,12 @@ entry_pseudo.grid(row=1, column=1)
 lbl_result = tk.Label(window, text=f"Essais réussis : 0/0", font=("Arial", 15))
 lbl_result.grid(row=1, column=3, padx=5, pady=5, columnspan=4)
 
+tk.Label(window, text='Password:', font=("Arial", 15)).grid(row=2, column=0, padx=5, pady=5)
+entry_Passwd = tk.Entry(window, font=("Arial", 15), show="*")
+entry_Passwd.grid(row=2, column=1, padx=5, pady=5)
+
 lbl_target = tk.Label(window, text="", font=("Arial", 15))
-lbl_target.grid(row=2, column=0, padx=5, pady=5, columnspan=6)
+lbl_target.grid(row=3, column=0, padx=5, pady=5, columnspan=6)
 
 canvas = tk.Canvas(window, width=l, height=h, bg="#f9d893")
 canvas.grid(row=4, column=0, padx=5, pady=5, columnspan=6)

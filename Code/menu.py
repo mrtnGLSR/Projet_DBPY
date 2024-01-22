@@ -6,6 +6,7 @@
 
 import tkinter as tk
 import subprocess
+import bcrypt
 
 # exercises array
 a_exercise=["geo01", "info02", "info05"]
@@ -19,7 +20,7 @@ openManagement = False
 # call other windows (exercices)
 def exercise(event, exer):
     print(exer)
-    subprocess.Popen(["python", exer+".py"])
+    subprocess.Popen(["python", exer+".py"], shell=True)
 
 
 #call display_results
